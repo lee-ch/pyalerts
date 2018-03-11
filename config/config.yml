@@ -1,3 +1,4 @@
+# Global config file
 slack:
   token: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
   webhook: "None"

@@ -1,0 +1,33 @@
+import os
+import re
+import sys
+
+
+# Git commit message requirements
+require_jira = False
+req_regex = r'[A-Z]{2,}-\d+'
+req_length = 10
+
+# Print message validation / failure in color if we're on a Linux OS
+if sys.startswith('linux'):
+	commit_msg_validated = '\033[32mCommit message validated successfully\033[0m'
+	commit_msg_failed = '\033[31mCommit message is too short, required number of characters is {}\033[0m'.format(req_length)
+else:
+	commit_msg_validated = 'Commit message validated successfully'
+	commit_msg_failed = 'Commit message is too short, required number of characters is {}'.format(req_length)
+
+
+# Get commit file
+commitFile = open(sys.argv[1])
+commitMessage = commitFile.read().strip()
+
+if len(commitMessage) < req_length:
+	print(commit_msg_failed)
+	sys.exit(1)
+
+if require_jira:
+	if re.search(req_regex, commitMessage) is not None:
+		print('JIRA ticket link required with a commit')
+		sys.exit(1)
+
+print(commit_msg_validated)
