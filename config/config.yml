@@ -1,5 +1,5 @@
 slack:
-  token: "xbc8d-15241568911-246524567892-345678912836-h2ja25gdnqaj23g671cja56bvxv40hio"
+  token: "xbc8d-15241568911-246524567892-345678912836-h2ja25gdnqaj23g671cja56bvxv40ggg"
   webhook: "None"
   channel: "alerts"
   username: "PyAlerts"
