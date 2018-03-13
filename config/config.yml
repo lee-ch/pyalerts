@@ -1,5 +1,6 @@
+# Token replaced by git hook
 slack:
-  token: "xoxp-99064668098-101064058484-324461180432-a3fa99efcade60a442bfa90a8ee16bcb"
+  token: "xxxxxx-xxxx-xxxxxxx-xxxx-xxxxxxxxx"
   webhook: "None"
   channel: "alerts"
   username: "PyAlerts"
@@ -7,7 +8,7 @@ slack:
 config:
   timeout: 60
   percent_threshold:
-    cpu_threshold: 70
-    ram_threshold: 70
-    disk_threshold: 2
+    cpu_threshold: 90
+    ram_threshold: 90
+    disk_threshold: 90
 
