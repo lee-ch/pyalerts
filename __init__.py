@@ -32,7 +32,7 @@ def getVersion(init_file):
 		fn = os.path.join(cwd, 'VERSION')
 		with open(fn) as f:
 			version_file = f.read().strip()
-			v = gitDescribe(version_file)
+			v = gitDescribe(str(version_file)
 			if v:
 				return v
 	except IOError:
