@@ -13,7 +13,7 @@ def gitDescribe(version):
 	'''
 	git describe produces version in the form of: x.x.x-xx
 	'''
-	VERSION_MATCH = re.compile(r'v(?P<major>\d+)\.(?P<minor>\d+)\.(?P<patch>\d+)(-(?P<dev>\d+))?')
+	VERSION_MATCH = re.compile(r'v?(?P<major>\d+)\.(?P<minor>\d+)\.(?P<patch>\d+)(-(?P<dev>\d+))?')
 	v = VERSION_MATCH.search(version)
 	if v:
 		major = int(v.group('major'))
@@ -31,7 +31,10 @@ def getVersion(init_file):
 		cwd = os.path.dirname(os.path.abspath(init_file))
 		fn = os.path.join(cwd, 'VERSION')
 		with open(fn) as f:
-			return f.read().strip()
+			version_file = f.read().strip()
+			v = gitDescribe(version_file)
+			if v:
+				return v
 	except IOError:
 		pass
 
