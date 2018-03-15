@@ -19,11 +19,11 @@ from subprocess import STDOUT
 
 
 tmpdir = tempfile.gettempdir()
-tmpfile = os.path.join(tmpdir, 'hello-service.log')
+tmpfile = os.path.join(tmpdir, 'pyalerts-service.log')
 logging.basicConfig(
     filename = tmpfile,
     level = logging.DEBUG, 
-    format = '[helloworld-service] %(levelname)-7.7s %(message)s'
+    format = '[pyalerts-service] %(levelname)-7.7s %(message)s'
 )
 
 cwd = os.getcwd()
@@ -32,9 +32,9 @@ progfile = os.path.join(parentdir, 'alerts.py')
 
 
 class PyalertsService(win32serviceutil.ServiceFramework):
-    _svc_name_ = 'Test Service'
-    _svc_display_name_ = 'Testing my Service'
-    _svc_description_ = 'This is to test out my Python script as a service in Windows'
+    _svc_name_ = 'PyAlerts Service'
+    _svc_display_name_ = 'PyAlerts Service'
+    _svc_description_ = 'PyAlerts for system alerts through slack'
     
     def __init__(self,args):
         win32serviceutil.ServiceFramework.__init__(self, args)
