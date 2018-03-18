@@ -1,6 +1,7 @@
 from __future__ import print_function, division
 import os
 import re
+import yaml
 import datetime
 
 from subprocess import PIPE
@@ -8,6 +9,12 @@ from subprocess import Popen
 from subprocess import STDOUT
 
 
+__BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+__CONF_DIR = os.path.join(__BASE_DIR, 'config')
+__CONF_FILE = os.path.join(__CONF_DIR, 'config.yml')
+
+with open(__CONF_FILE, 'r') as conf:
+  config = yaml.load(conf)
 
 def gitDescribe(version):
 	'''
@@ -21,8 +28,8 @@ def gitDescribe(version):
 		patch = int(v.group('patch'))
 		if v.group('dev'):
 			dev = int(v.group('dev'))
-			return '{}.{}.{}-{} dev'.format(major, minor, patch, dev)
-		return '{}.{}.{}'.format(major, minor, patch)
+			return '{0}.{1}.{2}-{3} dev'.format(major, minor, patch, dev)
+		return '{0}.{1}.{2}'.format(major, minor, patch)
 	return v
 
 
