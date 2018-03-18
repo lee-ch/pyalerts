@@ -9,6 +9,8 @@ import json
 import socket
 import logging
 
+import pyalerts
+
 if sys.platform.startswith('win'):
 	try:
 		import win32event
@@ -25,6 +27,9 @@ if sys.platform.startswith('win'):
 
 from pyalerts.utils.system import System
 from slackclient import SlackClient
+
+import pyalerts.jobs
+
 
 
 log = logging.getLogger(__name__)
@@ -55,7 +60,7 @@ class PyAlerts:
 	def send_alert(self, channel, username, alert_message):
 		message_attachment = [
 			{
-				"text": "{}".format(alert_message),
+				"text": "{0}".format(alert_message),
 				"callback_id": "incident_actions",
 				"color": "#f91313",
 				"attachment_type": "default",
