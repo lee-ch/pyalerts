@@ -8,7 +8,19 @@ slack:
 config:
   timeout: 60
   percent_threshold:
-    cpu_threshold: 90
-    ram_threshold: 90
-    disk_threshold: 90
+    cpu_threshold: 20
+    ram_threshold: 20
+    disk_threshold: 20
 
+master:
+  ports:
+    zmq: 5151
+    redis: 6379
+
+drone:
+  ports:
+    zmq: 5252
+    redis: 6379
+
+#command:
+#  cpu: "top -n 1 | awk 'NR == 3 {print}' | awk '{print $2}'"
