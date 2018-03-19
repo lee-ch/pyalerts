@@ -103,7 +103,7 @@ class System:
 		used = diskuse['used']
 		usage = float(used) / float(total) * 100.0
 		percent_used = '{0:.2f}'.format(usage)
-		return percent_used
+		return int(percent_used)
 
 
 	def disk_information(self, path):
@@ -148,10 +148,6 @@ class System:
 
 		for line in info:
 			yield line 
-
-	def disk_space(self):
-		disk_usage = int(float(self.disk_usage(MOUNT_POINT)))
-		return disk_usage
 
 	def cpu_usage(self):
 		cpu_usage = int(psutil.cpu_percent())
