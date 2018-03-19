@@ -25,10 +25,10 @@ if sys.platform.startswith('win'):
 			'ERROR: PyAlerts requires pywin32 to run on Windows'
 		)
 
+import pyalerts.transport.master
+
 from pyalerts.utils.system import System
 from slackclient import SlackClient
-
-import pyalerts.jobs
 
 
 
@@ -51,7 +51,7 @@ default_timeout = 60
 timeout = alert_timeout if alert_timeout else default_timeout
 
 
-class PyAlerts:
+class AlertManager:
 	'''
 	This class has two methods, ``send_alert`` and ``receive_alert`` which send an
 	alert to Slack and receives an alert from slack to the alert site configured
@@ -96,33 +96,32 @@ if __name__ == '__main__':
 		win32api.SetConsoleCtrlHandler(ctrlHandler, True)
 		win32serviceutil.HandleCommandLine(PyalertsService)
 
-	pyalerts = PyAlerts()
 	cpu_threshold = config['config']['percent_threshold']['cpu_threshold']
 	ram_threshold = config['config']['percent_threshold']['ram_threshold']
 	disk_threshold = config['config']['percent_threshold']['disk_threshold']
 
-	system = System()
-	cpuusage = system.cpu_usage()
-	ramusage = system.ram_usage()
-	diskusage = system.disk_space()
+	cpuusage = pyalerts.transport.master.exec_proc('cpu_usage')
+	ramusage = pyalerts.transport.master.exec_proc('ram_usage')
+	diskusage = pyalerts.transport.master.exec_proc('disk_usage')
 
 	# Alert if cpu, ram or disk usage is above the specified threshold in
 	# config file
 	while True:
-		if cpuusage >= cpu_threshold:
-			pyalerts.send_alert(channel=alert_channel,
+		alerts = AlertManager()
+		if int(cpuusage) >= cpu_threshold:
+			alerts.send_alert(channel=alert_channel,
 								username=alert_username,
 								alert_message="CPU usage: {}% "
 											  "which is above the maximum "
 											  "threshold of {}%".format(cpuusage, cpu_threshold))
-		if ramusage >= ram_threshold:
-			pyalerts.send_alert(channel=alert_channel,
+		if int(ramusage) >= ram_threshold:
+			alerts.send_alert(channel=alert_channel,
 								username=alert_username,
 								alert_message="RAM usage: {}% "
 											  "which is above the maximum "
 											  "threshold of {}%".format(ramusage, ram_threshold))
-		if diskusage >= disk_threshold:
-			pyalerts.send_alert(channel=alert_channel,
+		if int(diskusage) >= disk_threshold:
+			alerts.send_alert(channel=alert_channel,
 								username=alert_username,
 								alert_message="Disk usage: {}% "
 											  "which is above the maximum "
