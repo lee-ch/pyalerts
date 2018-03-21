@@ -15,12 +15,13 @@ config:
 master:
   ports:
     zmq: 5151
-    redis: 6379
 
 drone:
   ports:
     zmq: 5252
-    redis: 6379
+
+redis:
+  port: 6379
 
 #command:
 #  cpu: "top -n 1 | awk 'NR == 3 {print}' | awk '{print $2}'"
