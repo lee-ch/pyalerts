@@ -18,8 +18,9 @@ socket.bind('tcp://*:{0}'.format(port))
 # Listen for command
 while True:
 	proc = socket.recv()
+	system = System()
+	command = getattr(system, proc)()
 	try:
-		command = int(getattr(System, proc))
 		socket.send('{0}'.format(command))
 	except:
 		pass

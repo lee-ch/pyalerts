@@ -1,3 +1,9 @@
+'''
+pyalerts.transport.master
+-------------------------
+
+Used to manually pass process to drone
+'''
 import zmq
 import sys
 import psutil

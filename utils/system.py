@@ -102,8 +102,7 @@ class System:
 		total = diskuse['total']
 		used = diskuse['used']
 		usage = float(used) / float(total) * 100.0
-		percent_used = '{0:.2f}'.format(usage)
-		return int(percent_used)
+		return int(usage)
 
 
 	def disk_information(self, path):

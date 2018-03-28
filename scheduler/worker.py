@@ -6,10 +6,11 @@ import redis
 import pyalerts
 import pyalerts.jobs
 
-from pyalerts.jobs.scheduled import *
+from pyalerts.jobs import *
 from pyalerts.scheduler.queue import conn, listen
 
-from rq import Worker, Queue, Connection
+from rq import Worker, Queue, Connection, get_current_job
+
 
 
 if __name__ == '__main__':

@@ -8,7 +8,6 @@ import redis
 import json
 import socket
 import logging
-
 import pyalerts
 
 if sys.platform.startswith('win'):
@@ -26,8 +25,12 @@ if sys.platform.startswith('win'):
 		)
 
 import pyalerts.transport.master
+import pyalerts.jobs.usage
 
 from pyalerts.utils.system import System
+from pyalerts.scheduler.queue import queue_job, conn
+
+from rq import Worker, Queue, Connection
 from slackclient import SlackClient
 
 
@@ -45,7 +48,7 @@ slack_token = config['slack']['token']
 slack_webhook = config['slack']['webhook']
 alert_channel = config['slack']['channel']
 alert_username = config['slack']['username']
-alert_timeout = config['config']['timeout']
+alert_timeout = config['alerts']['timeout']
 default_timeout = 60
 
 timeout = alert_timeout if alert_timeout else default_timeout
@@ -100,30 +103,26 @@ if __name__ == '__main__':
 	ram_threshold = config['config']['percent_threshold']['ram_threshold']
 	disk_threshold = config['config']['percent_threshold']['disk_threshold']
 
-	cpuusage = pyalerts.transport.master.exec_proc('cpu_usage')
-	ramusage = pyalerts.transport.master.exec_proc('ram_usage')
-	diskusage = pyalerts.transport.master.exec_proc('disk_usage')
-
 	# Alert if cpu, ram or disk usage is above the specified threshold in
 	# config file
+	alerts = AlertManager()
+	threshold = 90
 	while True:
-		alerts = AlertManager()
-		if int(cpuusage) >= cpu_threshold:
-			alerts.send_alert(channel=alert_channel,
-								username=alert_username,
-								alert_message="CPU usage: {}% "
-											  "which is above the maximum "
-											  "threshold of {}%".format(cpuusage, cpu_threshold))
-		if int(ramusage) >= ram_threshold:
-			alerts.send_alert(channel=alert_channel,
-								username=alert_username,
-								alert_message="RAM usage: {}% "
-											  "which is above the maximum "
-											  "threshold of {}%".format(ramusage, ram_threshold))
-		if int(diskusage) >= disk_threshold:
-			alerts.send_alert(channel=alert_channel,
-								username=alert_username,
-								alert_message="Disk usage: {}% "
-											  "which is above the maximum "
-											  "threshold of {}%".format(diskusage, disk_threshold))
-		time.sleep(timeout)
+		for resource in ('cpu_usage', 'ram_usage', 'disk_usage'):
+			alert = queue_job(pyalerts.jobs.usage.get_usage, str(resource))
+			time.sleep(2)
+			usage = int(alert.result)
+			if usage >= threshold:
+				usage = resource.split('_')[0]
+				if 'disk' not in usage:
+					usage = usage.upper()
+				else:
+					for i, c in enumerate(usage):
+						usage = usage[:i].capitalize() + usage[i:]
+				alerts.send_alert(channel=alert_channel,
+								  username=alert_username,
+								  alert_message="{0} usage: {1}% "
+								  				"which is above the maximum "
+								  				"threshold of {2}%".format(usage, alert.result, threshold))
+
+			time.sleep(timeout)

@@ -6,11 +6,13 @@ slack:
   username: "PyAlerts"
 
 config:
-  timeout: 60
   percent_threshold:
     cpu_threshold: 90
     ram_threshold: 90
     disk_threshold: 90
+
+alerts:
+  timeout: 30
 
 master:
   ports:
@@ -22,6 +24,8 @@ drone:
 
 redis:
   port: 6379
+  ttl: 5000
+  timeout: 60
 
 #command:
 #  cpu: "top -n 1 | awk 'NR == 3 {print}' | awk '{print $2}'"
